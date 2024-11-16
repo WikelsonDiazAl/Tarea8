@@ -1,0 +1,168 @@
+﻿@page "/"
+@page "/Mantenimiento"
+@page "/Mantenimiento/{id:int}"
+@inject DetencionContexto Dc
+@using Microsoft.EntityFrameworkCore;
+@inject IJSRuntime JSx
+@rendermode InteractiveServer
+
+
+<h1>Mantenimiento</h1>
+
+@if(modo == Modo.Lista){
+    <h1 class="text-center"> Lista de Mantenimiento</h1>
+
+    <div class="text-end mb-3">
+        <button class="btn btn-primary" @onclick ="()=>modo = Modo.Editar"> Agregar detencion</button>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Fecha de detencion</th>
+                <th>Nombre</th>
+                <th>Pasaporte</th>
+                <th>Fecha de nacimiento</th>
+                <th>Coordenadas</th>
+                <th>Modificaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var Detencion in Detenciones){
+                <tr>
+                    <td>@Detencion.FechaDetencion</td>
+                    <td>@Detencion.Nombre @Detencion.Apellido</td>
+                    <td>@Detencion.Pasaporte</td>
+                    <td>@Detencion.FechaNacimiento</td>
+                    <td>@Detencion.Coordenadas()</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="()=> Editar(Detencion)">Editar</button>
+                        <button class="btn btn-danger" @onclick="()=> Eliminar(Detencion.IdDetencion)">Eliminar</button>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if(modo == Modo.Editar){
+    <EditForm Model="detencion" OnValidSubmit="Guardar">
+        <DataAnnotationsValidator />
+        <ValidationSummary/>
+
+        <div class="form-group mb-3">
+            <label for="Nombre">Nombre:</label>
+            <InputText id="Nombre" class="form-control" @bind-Value="@detencion.Nombre"  />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="Apellido">Apellido:</label>
+            <InputText id="Apellido" class="form-control" @bind-Value="@detencion.Apellido"  />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="Pasaporte">Pasaporte:</label>
+            <InputText id="Pasaporte" class="form-control" @bind-Value="@detencion.Pasaporte"  />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="Fecha de detencion">Fecha de detencion:</label>
+            <InputDate id="Fecha de detencion" class="form-control" @bind-Value="@detencion.FechaDetencion"  />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="Fecha de nacimiento">Fecha de nacimiento:</label>
+            <InputDate id="Fecha de nacimiento" class="form-control" @bind-Value="@detencion.FechaNacimiento"  />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="Longitud">Longitud:</label>
+            <InputNumber id="Longitud" class="form-control" @bind-Value="@detencion.Longitud"  />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="Latitud">Latitud:</label>
+            <InputNumber id="Latitud" class="form-control" @bind-Value="@detencion.Latitud"  />
+        </div>
+
+        <div class="mb-3">
+            <button  type="submit" class="btn btn-success">Guardar</button>
+            <button  type="buttom" class="btn btn-secondary" @onclick="Volver">Volver</button>
+        </div>
+
+    </EditForm>
+
+}
+
+@code{
+
+    [Parameter]
+    public int id {get; set;}
+
+    enum Modo{
+        Lista,
+        Editar
+    }
+
+    Modo modo = Modo.Lista;
+
+
+    List<Detencion> Detenciones = new List<Detencion>();
+    Detencion detencion = new Detencion();
+
+    
+
+       protected override void OnInitialized(){
+        Detenciones = Dc.Detencion.ToList();
+        StateHasChanged();
+    }
+
+
+    async Task Guardar(){
+
+        if(detencion.IdDetencion == 0){
+            Dc.Detencion.Add(detencion);
+            await Dc.SaveChangesAsync();
+
+            await JSx.InvokeVoidAsync("alert", "Se guardo correctamente");
+
+        }
+        else{
+            Dc.Detencion.Update(detencion);
+            await Dc.SaveChangesAsync();
+
+            await JSx.InvokeVoidAsync("alert", "Se modifico correctamente");
+        }
+
+        modo = Modo.Lista;
+    }
+
+    void Editar(Detencion DetencionS){
+        detencion = DetencionS;
+        modo = Modo.Editar;
+    }
+
+    async Task Eliminar(int IdDetencion){
+        var EliminarDetencion = Dc.Detencion.FirstOrDefault(d =>  d.IdDetencion == IdDetencion);
+
+        if(EliminarDetencion != null){
+            bool Confirmar = await JSx.InvokeAsync<bool>("confirm", "¿Estas seguro de querer eliminar este registro?");
+            
+            if(Confirmar){
+                Dc.Detencion.Remove(EliminarDetencion);
+                await Dc.SaveChangesAsync();
+                Detenciones = Dc.Detencion.ToList();
+                StateHasChanged();
+            }
+        }
+    }
+
+    async Task Volver(){
+        modo = Modo.Lista;
+    }
+
+
+    //Wikelson Diaz Alcantara 2023-0974
+
+
+}

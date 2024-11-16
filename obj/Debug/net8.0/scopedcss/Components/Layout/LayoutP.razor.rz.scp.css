@@ -1,0 +1,59 @@
+body[b-1lyvlw9s1e] {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f7fa;
+}
+
+.navbar[b-1lyvlw9s1e] {
+    background-color: #343a40;
+    padding: 10px 20px;
+    border-bottom: 2px solid #ddd;
+}
+
+.navbar-brand[b-1lyvlw9s1e] {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-decoration: none;
+}
+
+.navbar-toggler[b-1lyvlw9s1e] {
+    border: none;
+}
+
+.navbar-toggler-icon[b-1lyvlw9s1e] {
+    background-color: #ffffff;
+}
+
+.navbar-nav .nav-item[b-1lyvlw9s1e] {
+    margin-left: 20px;
+}
+
+.navbar-nav .nav-link[b-1lyvlw9s1e] {
+    color: #ffffff;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s;
+}
+
+.navbar-nav .nav-link:hover[b-1lyvlw9s1e] {
+    color: #ff6347;
+}
+
+.navbar-nav .nav-item.active .nav-link[b-1lyvlw9s1e] {
+    font-weight: bold;
+    color: #ff6347;
+}
+
+.content[b-1lyvlw9s1e] {
+    margin-top: 30px;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+

@@ -1,0 +1,16 @@
+@page "/Mapa"
+@rendermode InteractiveServer
+@inject DetencionContexto Dc
+@using Microsoft.EntityFrameworkCore;
+
+<h3 class="text-center">Mapa de detenciones</h3>
+
+<Map Detenciones="detenciones" />
+
+@code{
+    private List<Detencion> detenciones = new List<Detencion>();
+
+    protected override async Task OnInitializedAsync(){
+        detenciones = await Dc.Detencion.ToListAsync();
+    }
+}
